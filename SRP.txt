@@ -1,0 +1,52 @@
+     SRP:
+    
+
+def: The Single Responsibility Principle states that a class should have only one reason to change, meaning it should have only one responsibility or job.
+ This keeps classes focused and modular, which makes code easier to maintain, understand, and test.
+
+code violating srp:
+  class User:
+     def __init__(self,name,email):
+        self.name=name
+        self.email=email
+     def save(self):
+         print(f"saving user {self.name} in to database")
+     def send(self,message):
+          print(f"sending email to {self.email}: {message})
+user=User("Amith","am@gmail.com")
+user.save()
+ussr.send("hi")
+here in above class has 2 responsibilties that User class is responsible for both user data management and sending emails, which violates SRP:
+ class Adhering to srp:
+
+   class User:
+     def __init__(self,name,email):
+        self.name=name
+        self.email=email
+     def save(self):
+         print(f"saving user {self.name} in to database")
+    class Emailservice:
+         def send(self,email,message):
+              print(f"sending email to {email}: {message}")
+  user=User()
+  user.save()
+  emailservice=Emailservice()
+   emailservice.send(user.email,"hii")
+
+Inn the above example, the User class is only responsible for user data management, and the EmailService class is responsible for sending emails. 
+This adheres to the Single Responsibility Principle and makes the code more maintainable and testable.
+   
+uses of srp:
+  
+
+Improved Maintainability: By keeping responsibilities separate, each class is simpler and easier to understand, making the codebase easier to maintain and update.
+Enhanced Testability: Classes with a single responsibility are easier to test because they have fewer dependencies and less complex behavior.
+Increased Reusability: Classes focused on a single responsibility can be reused across different parts of the application or even in different projects.
+Better Collaboration: When responsibilities are clearly defined, multiple developers can work on different parts of the system simultaneously without causing conflicts.
+Simplified Debugging: Isolating responsibilities makes it easier to pinpoint and fix bugs since each class has a well-defined role.
+For example, in the .NET framework:
+
+Service Classes handle business logic.
+Repository Classes manage data access logic.
+This separation ensures that changes in business rules do not affect data access code and vice versa, leading to a more robust and flexible system.
+
