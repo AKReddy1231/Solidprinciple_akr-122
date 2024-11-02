@@ -1,0 +1,67 @@
+   OCP:
+   
+crux: A class should be open for extension but closed for modification.
+
+def:The Open/Closed Principle means you should be able to extend the behavior of a class without modifying its source code. 
+This can be achieved using interfaces, abstract classes, or polymorphism, allowing new functionality to be added without changing existing code.
+
+Example: Payment System
+
+Suppose we’re developing a payment system that currently supports credit card payments. 
+In the future, we want to add support for new payment types, like PayPal or Apple Pay, without altering the existing credit card payment code.
+
+code:
+    
+ ocp violation:
+    
+class Paymentprocess:
+   def processpayment(self,paymenttype,amount):
+       if paymenttype=="creditcard":
+            print(f"processing credit card payment of {amount}")
+        elif paymentype=="paypal":
+            print(f"processing paypal payment of {amount}")
+        elif.....
+hwere the problem with above code is for each new paymenttype is added we are modifying process_payment and theclass itself
+
+the problem is As new payment methods are added, the process_payment method will grow larger and more complex. It can become difficult to read, test, and maintain.
+A long series of if-elif conditions creates “spaghetti code,” which makes it harder for developers to follow the code’s logic, understand the overall flow, or spot bugs.
+
+ Scalability Issues:
+
+In a large application, scalability and modularity are key. If PaymentProcessor has to be modified each time a new payment method is introduced, the system isn’t truly scalable.
+For example, in a global application, we may need to support additional region-specific payment types or business-specific payment gateways (like Stripe, Apple Pay, Google Pay). 
+Constantly modifying PaymentProcessor creates a bottleneck and reduces the flexibility to expand quickly.
+           
+It also violates srp
+
+code Adhering O/C:Instead of modifying PaymentProcessor for each new payment type, let’s adhere to OCP by creating a PaymentProcessor interface and separate classes for each payment type. This way, we can add new payment types by simply creating new classes, without changing existing code.
+
+class Paymentprocess(ABC):
+  
+   @abstractmethod
+     def processpayment(self,amount):
+         pass
+class Creditcardpaymentprocessor(Paymentprocess):
+    def processpayment(self,amount):
+        print(f"processing credit card transaction of {amount}")
+class PayPalPaymentProcessor(PaymentProcessor):
+    def process_payment(self, amount):
+        print(f"Processing PayPal payment of ${amount}") 
+def make_payment(processor: paymentprocess,amount):
+     processor.process_payment(amount)
+
+credit_card_processor = CreditCardPaymentProcessor()
+paypal_processor = PayPalPaymentProcessor()
+
+make_payment(credit_card_processor, 100)
+make_payment(paypal_processor, 150)
+
+PaymentProcessor is an abstract base class (or interface) with a method process_payment. Any payment type we want to support will implement this interface.
+CreditCardPaymentProcessor and PayPalPaymentProcessor are concrete classes that implement PaymentProcessor, handling their specific payment logic.
+Adding new payment types, such as ApplePayPaymentProcessor, involves creating a new class implementing PaymentProcessor without modifying any existing classes.
+
+ This makes the design more scalable, maintainable, and resilient to future changes."
+
+   
+       
+
