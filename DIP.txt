@@ -1,0 +1,62 @@
+  DIP:
+
+def: High level classes should not depend on low level classes instead it should depend on abstractions
+
+or High-level modules should depend on abstractions, not on concrete implementations.
+
+code:
+  violating dip:
+    class FileLogger:
+    def log(self, message):
+        print(f"Logging to file: {message}")
+
+    class Dataaccess:
+         def __init__(self):
+              self.logger=filelogger()
+          def savedata(self):
+              self.logger.log("data saved succssfully")
+    dal=Dataaccess()
+    dal.savedata()
+Problem with the Violation
+Tight Coupling: DataAccessLayer is tightly coupled to FileLogger, so if we want to switch to DatabaseLogger, we’d have to modify DataAccessLayer, which violates DIP.
+Lack of Flexibility: Adding new loggers (like DatabaseLogger or ConsoleLogger) requires changes in the DataAccessLayer code, increasing maintenance costs and reducing flexibility.
+
+Code adhering dip:
+  class Ilogger(ABC):
+         @abstractmethod
+         def log(self,message):
+              pass
+  class Filelogger(Ilogger):
+         def log(self,message):
+             print(f"logging into file {mesage}")
+class Dblogger:
+  def log(self,message):
+       print(F"logging into db {message}
+  
+
+class Dataaccesslayer:
+     def __init__(self,logger: Ilogger):
+           self.logger=logger
+     def savedata(self):
+          self.logger.log("datasavedsuccessfuly")
+
+dal_with_file_logger = DataAccessLayer(file_logger)
+dal_with_file_logger.save_data("Sample data")  # Logs to file
+
+dal_with_db_logger = DataAccessLayer(db_logger)
+dal_with_db_logger.save_data("Sample data")  # L
+            
+
+
+
+Explanation of Adherence to DIP
+ILogger Interface: ILogger is an abstraction that defines the log method. Both FileLogger and DatabaseLogger implement this interface.
+Dependency Injection: The DataAccessLayer accepts an ILogger instance through its constructor. This way, it doesn’t depend on any specific logger implementation, adhering to DIP.
+Easy Swapping: You can now inject any logger that implements ILogger without modifying DataAccessLayer, making the system more flexible and extendable.
+
+. By introducing an ILogger interface and injecting it through the constructor, DataAccessLayer now depends on an abstraction. This design allows us to easily swap in DatabaseLogger, FileLogger, or any other logger without modifying DataAccessLayer, adhering to DIP and improving flexibility."
+
+In .NET, the Dependency Inversion Principle is implemented using interfaces and Dependency Injection.
+ Here, the controller depends on IService rather than a concrete Service class, and Service depends on IRepository rather than a concrete Repository. With DI,
+ the framework injects these dependencies automatically. This design allows us to easily swap implementations without modifying high-level modules, adhering to DIP and promoting flexibility and testability in the application."
+

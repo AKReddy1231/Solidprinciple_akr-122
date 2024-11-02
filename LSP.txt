@@ -1,0 +1,106 @@
+   LSP:
+   
+
+Def:  Objects of a superclass should be replaceable with objects of its subclasses without affecting the correctness of the program.
+
+The Liskov Substitution Principle emphasizes that derived (subclass) types should be completely interchangeable with their base (superclass) type. 
+Any class inheriting from a superclass should behave as expected wherever the superclass is used, without introducing unexpected behavior.
+
+code:
+  violating lsp:
+ class Employee:
+    def get_salary(self):
+        pass
+
+    def get_bonus(self):
+        pass
+
+class PermanentEmployee(Employee):
+    def get_salary(self):
+        return "Calculating salary for permanent employee"
+
+    def get_bonus(self):
+        return "Calculating bonus for permanent employee"
+
+class ContractEmployee(Employee):
+    def get_salary(self):
+        return "Calculating salary for contract employee"
+
+    def get_bonus(self):
+        raise NotImplementedError("Contract employees do not receive a bonus")
+
+# Usage
+def process_employee(employee: Employee):
+    print(employee.get_salary())
+    print(employee.get_bonus())  # Problem: Raises error for ContractEmployee
+
+# Testing with PermanentEmployee
+perm_emp = PermanentEmployee()
+process_employee(perm_emp)  # Works as expected
+
+# Testing with ContractEmployee
+contract_emp = ContractEmployee()
+process_employee(contract_emp)  # Raises NotImplementedError: Violates LSP
+
+
+Expectation Misalignment:
+The Employee base class expects all subclasses to implement both get_salary() and get_bonus().
+Contract employees don’t receive a bonus, so the get_bonus() method in ContractEmployee raises NotImplementedError, which is unexpected for code relying on the Employee interface.
+Violation of Substitutability:
+The process_employee function expects any Employee to provide both salary and bonus. Substituting a ContractEmployee breaks this expectation, violating LSP.
+
+
+     code Adhering LSP:
+        class Employee(ABC):
+              @abstractmethpod
+              def getsalary(self):
+                   pass
+             
+         class BonusElgible(Employee):
+                  @abstarctmethod
+                  def getbonus(self):
+                         pass
+         class PermanentEmployee(Bonusemployee):
+               def getsalary(self):
+                       return 1888
+               def getbonus(self):
+                        return 1000
+         class ContractEmployee(Emploee):
+                  def getsalry():
+                         return 18878
+        def emp_info(employee):
+              print(employee.getsalry())
+                if isinstance(employee,BonusElgible):
+                    print(employee.getbonus()
+                 else:
+                     print("no bonus elgible")
+  perm=PermanentEmployee()
+   emp_info(perm)
+
+contract_emp = ContractEmployee()
+employee_info(contract_emp)
+
+
+Employee and BonusEligibleEmployee Hierarchies:
+
+Employee defines the get_salary method, which all employee types implement.
+BonusEligibleEmployee extends Employee and adds get_bonus, ensuring only eligible employees implement this method.
+employee_info Client Code:
+
+employee_info prints the employee’s salary using get_salary.
+Using isinstance, it checks if the employee is a BonusEligibleEmployee. If true, it calls get_bonus; otherwise, it prints a message indicating that the employee isn’t eligible for a bonus.
+Benefit of This Approach:
+
+The employee_info function is centralized and can handle both PermanentEmployee and ContractEmployee instances without needing separate functions.
+This design adheres to the Liskov Substitution Principle (LSP), as ContractEmployee can be substituted for Employee without any unexpected behavior.
+               
+      
+In simpler terms, it means that a subclass should be able to replace its superclass without causing unexpected behavior. This principle helps ensure that code remains flexible, maintainable, and predictable when using inheritance.
+
+Why LSP is Important
+Prevents Unexpected Behavior: It ensures that derived classes don’t override or change behavior in a way that breaks the expectations set by the base class.
+Enhances Flexibility: By following LSP, you can use subclasses interchangeably with their base class, making your code more modular and easier to extend.
+                 
+     
+          
+      

@@ -1,0 +1,97 @@
+    ISP:
+ 
+
+def:  A class should not be forced to implement interfaces it does not use.
+
+The Interface Segregation Principle encourages designing specific, client-focused interfaces rather than a single general-purpose interface that forces classes to implement irrelevant methods.
+
+code:
+   violating:
+    from abc import ABC, abstractmethod
+
+class Vehicle(ABC):
+    @abstractmethod
+    def drive(self):
+        pass
+
+    @abstractmethod
+    def fly(self):
+        pass
+
+class NormalCar(Vehicle):
+    def drive(self):
+        print("Driving on the road")
+
+    def fly(self):
+        raise NotImplementedError("Normal cars cannot fly")
+
+class FlyingCar(Vehicle):
+    def drive(self):
+        print("Driving on the road")
+
+    def fly(self):
+        print("Flying in the sky")
+
+# Usage
+normal_car = NormalCar()
+normal_car.drive()  # Works fine
+normal_car.fly()    # Raises NotImplementedError
+
+
+Problem with the Violation
+The NormalCar class is forced to implement the fly method, which it doesn’t need. This results in a NotImplementedError, violating ISP by including unnecessary methods.
+
+
+Adhering code:
+ To adhere to ISP, we separate Vehicle into two specific interfaces, Driveable and Flyable. Now, each class can implement only the methods it needs, eliminating unnecessary implementations.
+
+  class Driveable(ABC):
+    @abstractmethod
+    def drive(self):
+        pass
+
+class Flyable(ABC):
+    @abstractmethod
+    def fly(self):
+        pass
+
+class NormalCar(Driveable):
+    def drive(self):
+        print("Driving on the road")
+
+class FlyingCar(Driveable, Flyable):
+    def drive(self):
+        print("Driving on the road")
+
+    def fly(self):
+        print("Flying in the sky")
+
+# Usage
+normal_car = NormalCar()
+normal_car.drive()  # Works fine
+
+flying_car = FlyingCar()
+flying_car.drive()  # Works fine
+flying_car.fly()    # Works fine
+
+
+Explanation of Adherence
+Separate Interfaces: We created two specific interfaces, Driveable for vehicles that can drive and Flyable for vehicles that can fly.
+NormalCar and FlyingCar Classes:
+NormalCar implements only Driveable, as it doesn’t need fly.
+FlyingCar implements both Driveable and Flyable, supporting both methods as it can drive and fly.
+Why This Adheres to ISP
+This design follows ISP by allowing NormalCar to only implement drive, avoiding irrelevant fly methods. Each class now implements only the interfaces it requires, making the code cleaner and more maintainable.
+
+uses:
+  The Interface Segregation Principle (ISP) has several key benefits:
+
+Enhances Modularity: By creating smaller, focused interfaces, each class implements only what it needs, making the code easier to understand and work with.
+
+Improves Flexibility: Changes in one interface don’t affect classes that don’t use it, minimizing unintended side effects.
+
+Simplifies Maintenance: Smaller interfaces lead to simpler, more manageable classes, reducing bugs and making code easier to maintain.
+
+Increases Testability: Focused interfaces allow for targeted testing, enabling easier testing of individual functionality.
+
+In summary, ISP keeps the code modular, focused, and easier to extend, adhering to best practices for clean, maintainable code.
